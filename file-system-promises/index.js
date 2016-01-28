@@ -16,8 +16,8 @@ exports.getPathType = function(path){
         fs.stat(path, function(err, stats){
             if(err || !stats) return resolve('nothing');
             if(stats.isDirectory()) return resolve('directory');
-            else if(stats.isFile()) return resolve('file');
-            else return resolve('other');
+            if(stats.isFile()) return resolve('file');
+            return resolve('other');
         });
     });
 };
