@@ -1,0 +1,26 @@
+{
+  "name": "it410project",
+  "version": "1.0.0",
+  "description": "Service project signup and request",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://coryjohnson26@github.com/coryjohnson26/it410project.git"
+  },
+  "author": "Cory Johnson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coryjohnson26/it410project/issues"
+  },
+  "homepage": "https://github.com/coryjohnson26/it410project#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "kerberos": "0.0.18",
+    "mocha": "^2.4.5",
+    "mongodb": "^2.1.4",
+    "serve-index": "^1.7.3"
+  }
+}

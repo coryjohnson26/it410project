@@ -1,0 +1,7 @@
+{
+	"name"			:	"static-file-server",
+	"script"		:	"index.js",
+	"watch"			:	["index.js"],
+	"out_file"		:	"out.log",
+	"error_file"	:	"error.log"
+}

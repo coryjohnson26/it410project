@@ -42,7 +42,8 @@ exports.getDirectoryTypes = function(path, depth, filter){
                         return Promise.map(files, function(file){
                             return exports.getPathType(path + '/' + file).then(function(value){
                                 if(value === 'directory' && depth){
-                                    return exports.getDirectoryTypes(path + '/' + file, (depth === -1 ? depth : --depth), filter).then(function(value){
+                                    return exports.getDirectoryTypes(path + '/' + file, (depth === -1 ? depth : depth--), filter)
+                                    .then(function(value){
                                         for (var item in value) { obj[item] = value[item]; }
                                     });
                                 }

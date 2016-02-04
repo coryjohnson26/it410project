@@ -1,0 +1,14 @@
+{
+  "name": "file-system-promises",
+  "version": "1.0.0",
+  "description": "'File System promises assignment'",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests"
+  },
+  "author": "Cory Johnson",
+  "license": "ISC"
+}
