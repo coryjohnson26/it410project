@@ -4,6 +4,7 @@
   "description": "Service project signup and request",
   "main": "index.js",
   "scripts": {
+    "start": "pm2 start sfs.json",
     "test": "mocha tests"
   },
   "repository": {

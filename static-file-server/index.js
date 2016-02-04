@@ -11,5 +11,5 @@ app.use(express.static(__dirname + input));
 app.use('/', serveIndex(__dirname + input));
 
 http.createServer(app).listen(port, function(){
-	console.log('Server started on port ' + port);
+	console.log('Server listening on port ' + port);
 });
