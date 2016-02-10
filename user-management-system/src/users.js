@@ -15,9 +15,39 @@ exports.createUser = function(user, pass){
 };
 
 exports.updateUser = function(user, pass){
-
+	return new Promise(function(resolve, reject){
+		db.updateUser(user,pass)
+			.then(function(val){
+				if(val.nModified === 0)return reject('User doesn\'t exist')
+				return resolve(val);
+			})
+			.catch(function(err){
+				return reject(err);
+			});
+	});
 };
 
 exports.authUser = function(user, pass){
-
+	return new Promise(function(resolve, reject){
+		db.verifyUser(user,pass)
+			.then(function(val){
+				return resolve(val);
+			})
+			.catch(function(err){
+				return reject(err);
+			});
+	});
 };
+
+exports.clearAll = function(){
+	return new Promise(function(resolve, reject){
+	db.removeAll()
+		.then(function(val){
+			if(!val) return reject('deletion failed');
+			return resolve(val);
+		})
+		.catch(function(err){
+			return reject(err);
+		});
+	});
+}
