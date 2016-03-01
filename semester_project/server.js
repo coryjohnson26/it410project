@@ -41,8 +41,8 @@ app.use(session({ secret: 'secret key', resave: false, saveUninitialized: true }
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use('/', require('./routes/user-management'))
 app.use(express.static(__dirname + '/dist'))
+app.use('/', require('./routes/user-management'))
 
 app.listen(port, function(){
 	console.log('listening on port ' + port)
