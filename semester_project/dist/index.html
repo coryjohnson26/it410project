@@ -1,0 +1,29 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8">
+    <title>Project: Community</title>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <!-- Angular.js Libraries -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+    <!-- Angular Material Library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+    <!-- Custom Angular code -->
+    <script type="text/javascript" src="js/app.js"></script>
+    <!--<script type="text/javascript">
+        (function(){
+            var app = angular.module('app', [])
+            app.controller('Ctrl', function(){
+                this.name = 'Cory'
+            })
+        })();
+    </script> -->
+</head>
+<body ng-controller="Ctrl as c">
+    <h1>Hello, {{ c.name }}</h1>
+    
+</body>
+</html>
