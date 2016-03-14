@@ -37,7 +37,7 @@ passport.deserializeUser(function(username, done) {
 // tell the express app what middleware to use
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
-app.use(session({ secret: 'secret key', resave: false, saveUninitialized: true }))
+app.use(session({ secret: 'secrat key', resave: false, saveUninitialized: true }))
 app.use(passport.initialize())
 app.use(passport.session())
 

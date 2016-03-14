@@ -1,0 +1,15 @@
+<div id="projectPage" ng-controller="projectCtrl as ctrl" flex ng-cloak>
+	<md-grid-list
+	        md-cols-xs="1" md-cols-sm="2" md-cols-md="4" md-cols-gt-md="5"
+	        md-row-height-gt-md="1:1" md-row-height="2:2"
+	        md-gutter="12px" md-gutter-gt-sm="8px" >
+
+	    <md-grid-tile 
+	    	ng-class=ctrl.project.color>
+	      	<a href="/projects/{{ctrl.project.link}}"><md-grid-tile-footer>
+	    	    <h3>{{ctrl.project.title}}</h3>
+		        <h4>{{ctrl.project.description}}</h4>
+			</md-grid-tile-footer></a>
+	    </md-grid-tile>
+	</md-grid-list>
+</div>

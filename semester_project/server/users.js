@@ -1,4 +1,4 @@
-const db = require('../config/mongodb');
+const db = require('../config/users');
 const Promise = require('bluebird');
 
 exports.createUser = function(user, pass){

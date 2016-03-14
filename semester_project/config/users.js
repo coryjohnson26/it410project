@@ -3,7 +3,7 @@ const Promise = require('bluebird');
 const assert = require('assert');
 
 var mongodb;
-var url = 'mongodb://localhost:27017/userManagement';
+var url = 'mongodb://localhost:27017/project';
 
 var connect = function(){
 	return new Promise(function(resolve, reject){
@@ -19,7 +19,7 @@ exports.addUser = function(user, pass){
 	.then(function(db){
 		return exports.findUser(user)
 			.then(function(val){
-				if(!val) return db.collection('users').insertOne({username: user, password: pass});
+				if(!val) return db.collection('user').insertOne({username: user, password: pass});
 				return new Promise(function(resolve, reject){
 					return resolve();
 				});
@@ -30,27 +30,27 @@ exports.addUser = function(user, pass){
 exports.updateUser = function(user, pass){
 	return connect()
 	.then(function(db){
-		return db.collection('users').update({username: user}, {username: user, password: pass}, {upsert: false});
+		return db.collection('user').update({username: user}, {username: user, password: pass}, {upsert: false});
 	});
 };
 
 exports.findUser = function(user){
 	return connect()
 	.then(function(db){
-		return db.collection('users').findOne({username: user});
+		return db.collection('user').findOne({username: user});
 	});
 };
 
 exports.verifyUser = function(user, pass){
 	return connect()
 	.then(function(db){
-		return db.collection('users').findOne({username: user, password: pass});
+		return db.collection('user').findOne({username: user, password: pass});
 	});
 };
 
 exports.remove = function(user){
 	return connect()
 	.then(function(db){
-		return db.collection('users').remove({username: user});
+		return db.collection('user').remove({username: user});
 	});
 }

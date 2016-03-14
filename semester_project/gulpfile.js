@@ -41,13 +41,13 @@ gulp.task('htmlMin', ['jsMin', 'autoprefixCSS'], function() {
 
 gulp.task('imgMin', function() {
 	return gulp.src(['src/*.jpg', 'src/**/*.jpg'])
-		.pipe(changed('dist/images'))
+		.pipe(changed('dist'))
 		.pipe(imagemin({
 			progressive: true,
 			svgoPlugins: [{removeViewBox: false}],
 			use: [jpegtran()]
 		}))
-		.pipe(gulp.dest('dist/images'))
+		.pipe(gulp.dest('dist'))
 })
 
 gulp.task('watch', function () {
