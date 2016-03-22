@@ -1,5 +1,47 @@
 (function(){
-	angular.module('app').service('projectService', function(){
+    var app = angular.module('app', ['ngMaterial', 'ngRoute', 'ngMessages', 'ui.bootstrap']);
+    
+    app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
+        var isLoggedIn = function ($q, $http, $location){
+			var deferred = $q.defer()
+			$http.get('/loggedin').success(function (email){
+				if (email){
+					deferred.resolve()
+				}else{
+					deferred.reject()
+					$location.url('/')
+				}
+			})
+			return deferred.promise
+		}
+
+        $locationProvider.html5Mode({enabled:true, requireBase : false});
+
+        $routeProvider
+            .when('/', {
+            	templateUrl:'views/partials/login.html',
+            	controller: 'homeCtrl'
+            })
+            .when('/home', {
+            	templateUrl:'views/partials/home.html',
+            	resolve:{
+					isLoggedIn: isLoggedIn
+				}
+            })
+            .when('/projects', {
+            	templateUrl:'views/partials/projects.html',
+            	controller: 'projectCtrl'/*,
+            	resolve:{
+					isLoggedIn: isLoggedIn
+				}*/
+            })
+            .otherwise({
+            	redirectTo:'/home', 
+            	templateUrl:'views/partials/home.html'})
+           
+	}]);
+
+	app.service('projectService', function(){
 		this.projects = [
 			{
 				id: 0,
@@ -71,5 +113,18 @@
 			return this.selectedProject;
 		}
 	})
+
+	app.controller('homeCtrl', ['projectService', function(projectService){
+		this.projects = projectService.getAllProjects()
+
+		this.selectProject = function(id){
+			projectService.setProject(id)
+		}
+
+	}]);
+
+	app.controller('projectCtrl', ['projectService', function(projectService){
+		this.project = projectService.getProject();
+	}]);
 
 })();

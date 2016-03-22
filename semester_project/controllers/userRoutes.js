@@ -1,24 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
-const users = require('../server/users')
+const users = require('../src/users')
 const path = require('path')
 
-/**
-	Not authenticated === 100
-	User created === 200
-	Error === 300
-	User updated === 400
-	Logged in === 500
-	Logged out === 600
-*/
-
-router.get('/services/user', function(req, res){
+router.get('/user/getUser', function(req, res){
 	if(req.user) res.send(req.user.username)
 	else res.send(100)
 })
 
-router.post('/services/user', function(req, res){
+router.post('/user/register', function(req, res){
 	var username = req.body.username
 	var password = req.body.password
 	users.createUser(username, password)
@@ -30,7 +21,7 @@ router.post('/services/user', function(req, res){
 		})
 })
 
-router.put('/services/user', function(req, res){
+router.put('/user/authUser', function(req, res){
 	var username = req.body.username
 	var password = req.body.password
 	users.createUser(username, password)
@@ -51,17 +42,13 @@ router.put('/services/user', function(req, res){
 		})
 })
 
-router.put('/services/login', passport.authenticate('local'), function(req, res, next){
+router.put('/user/login', passport.authenticate('local'), function(req, res, next){
 	res.send(500)
 })
 
-router.put('/services/logout', function(req, res){
+router.put('/user/logout', function(req, res){
 	req.logout()
 	res.send(600)
-})
-
-router.get('*', function(req, res){
-    res.sendFile('index.html', {root:path.join(__dirname, '../dist/')})
 })
 
 module.exports = router

@@ -12,7 +12,7 @@ const changed = require('gulp-changed')
 
 
 gulp.task('autoprefixCSS', function () {
-	return gulp.src(['src/*.css', 'src/**/*.css'])
+	return gulp.src(['public/*.css', 'public/**/*.css'])
 		.pipe(changed('dist'))
 		.pipe(autoprefixer({
 			browsers: ['last 2 versions'],
@@ -24,7 +24,7 @@ gulp.task('autoprefixCSS', function () {
 })
 
 gulp.task('jsMin', function() {
-	return gulp.src(['src/*.js', 'src/**/*.js'])
+	return gulp.src(['public/*.js', 'public/**/*.js'])
 		.pipe(changed('dist'))
 		.pipe(uglify())
 		.pipe(rename({ suffix: '.min' }))
@@ -32,7 +32,7 @@ gulp.task('jsMin', function() {
 })
 
 gulp.task('htmlMin', ['jsMin', 'autoprefixCSS'], function() {
-	return gulp.src(['src/*.html', 'src/**/*.html'])
+	return gulp.src(['public/*.html', 'public/**/*.html'])
 		.pipe(changed('dist'))
 		.pipe(htmlmin())
 		.pipe(useref())
@@ -40,7 +40,7 @@ gulp.task('htmlMin', ['jsMin', 'autoprefixCSS'], function() {
 })
 
 gulp.task('imgMin', function() {
-	return gulp.src(['src/*.jpg', 'src/**/*.jpg'])
+	return gulp.src(['public/*.jpg', 'public/**/*.jpg'])
 		.pipe(changed('dist'))
 		.pipe(imagemin({
 			progressive: true,
@@ -51,11 +51,11 @@ gulp.task('imgMin', function() {
 })
 
 gulp.task('watch', function () {
-	gulp.watch(['src/*.jpg', 'src/**/*.jpg'], ['imgMin'])
-	gulp.watch(['src/*.js', 'src/**/*.js'], ['jsMin'])
-	gulp.watch(['src/*.html', 'src/**/*.html'], ['htmlMin'])
-	gulp.watch(['src/*.css', 'src/**/*.css'], ['autoprefixCSS'])
-	//gulp.watch('src/*.scss','src/**/*.scss', ['convertSASS'])
+	gulp.watch(['public/*.jpg', 'public/**/*.jpg'], ['imgMin'])
+	gulp.watch(['public/*.js', 'public/**/*.js'], ['jsMin'])
+	gulp.watch(['public/*.html', 'public/**/*.html'], ['htmlMin'])
+	gulp.watch(['public/*.css', 'public/**/*.css'], ['autoprefixCSS'])
+	//gulp.watch('public/*.scss','public/**/*.scss', ['convertSASS'])
 })
 
 gulp.task('default', ['jsMin', 'autoprefixCSS', 'htmlMin', 'imgMin'], function() {

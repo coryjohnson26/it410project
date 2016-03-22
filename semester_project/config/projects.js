@@ -46,6 +46,4 @@ exports.getProjects = function(){
 	.then(function(db){
 		return db.collection('project').find();
 	})
-}
-
-}
+};

@@ -1,49 +1,76 @@
-const express = require('express')
+require('dotenv').config()
+const express   = require('express')
+const http = require('http')
+const https = require('https')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const bcrypt = require('bcrypt-nodejs')
+const session = require('express-session')
+const Q = require('q')
+const async = require('async-q')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const cookieParser = require('cookie-parser')
-const users = require('./server/users')
-const session = require('express-session');
+const favicon = require('serve-favicon')
+const app   = express()
+const users = require('./src/users')
 
-var app = express()
+const port = process.env.PORT || 3000
 
-var port = process.env.PORT || 3000
-
-// tell passport to use a local strategy and tell it how to validate a username and password
-passport.use(new LocalStrategy(function(username, password, done) {
-    users.authUser(username, password)
-    	.then(function(val){
-    		return done(null, val)
-    	})
-    	.catch(function(err){
-    		return done(null, false)
-    	})
+app.disable('x-powered-by')
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser('projectServiceSecretiveSecret'))
+app.use(session({
+    secret: 'projectServiceSecretiveSecret',
+    duration: 1 * 60 * 60 * 1000,
+    cookie: {
+        ephemeral: false,
+        httpOnly: true,
+        secure: false
+    },
+    resave: true,
+    saveUninitialized: true
 }))
-
-// tell passport how to turn a user into serialized data that will be stored with the session
-passport.serializeUser(function(user, done) {
-    done(null, user.username)
-})
-
-// tell passport how to go from the serialized data back to the user
-passport.deserializeUser(function(username, done) {
-	users.findUser(username)
-		.then(function(user){
-			done(null, user)
-		})
-})
-
-// tell the express app what middleware to use
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cookieParser())
-app.use(session({ secret: 'secrat key', resave: false, saveUninitialized: true }))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(favicon(__dirname + '/dist/img/favicon.ico'))
 
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+},
+function (email, password, done) {
+    email = email.toLowerCase()
+    users.findUser(email).then( function (data){
+        if(data[0].length === 0){
+            return done(null, false)
+        }
+        var user = data[0][0]
+
+        bcrypt.compare(password, user.password, function (err, res) {
+            if(res){
+                return done(null, { id: user.userID, type: user.userType, email: user.email, first: user.firstName, last: user.lastName })
+            }
+            done(null, false)
+        })
+    }).catch( function (err){
+        console.error(err)
+    })
+}))
+passport.serializeUser(function (user, done) {
+    done(null, user.id)
+})
+passport.deserializeUser(function (id, done) {
+    acc.findUserById(id).then(function (user){
+        done(null, { id: user.userID, email: user.email, first: user.firstName, last: user.lastName })
+    })
+})
+
+app.all('/project/*', require('./controllers/projectRoutes'))
+app.all('/user/*', require('./controllers/userRoutes'))
 app.use(express.static(__dirname + '/dist'))
-app.use('/', require('./routes/user-management'))
+app.all('/*', require('./controllers/routes'))
 
-app.listen(port, function(){
-	console.log('listening on port ' + port)
+http.createServer(app).listen(port, function (){
+    console.log('SERVER STARTED ' + port)
 })
