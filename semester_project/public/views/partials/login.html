@@ -1,1 +1,31 @@
-<div>This is a login partial!</div>
+<h1>Let's get serving!</h1>
+<div class="main" ng-controller='loginCtrl as login'>
+	<md-content layout-padding>
+        <div>
+            <form name="userForm" ng-submit="login.login()">
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Email</label>
+                        <input required name="email" ng-model="login.email" type="email">
+                        <div ng-messages="userForm.email.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Password</label>
+                        <input required name="password" ng-model="login.password" type="password">
+                        <div ng-messages="userForm.password.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="end center">
+	                <md-button layout-align="end center" class="md-primary" href="register">Register</md-button>
+	                <md-button class="md-raised md-primary" type="submit">Login</md-button>
+            	</div>
+            </form>
+        </div>
+    </md-content>
+</div>

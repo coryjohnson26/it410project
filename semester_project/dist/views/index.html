@@ -9,36 +9,68 @@
         <!--[if lt IE 9]>
             <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
-        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+        <link rel="stylesheet" href="/css/angular-material.min.css">
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link href="css/main.min.css" rel="stylesheet">
     </head>
     <body>
-        <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/home">Project:Service</a>
-                </div>
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Anything for the right side of the navbar -->
-                </ul>   
-            </div>
-        </nav>
-        <div class="container">
-            <div ng-view></div>
+        <div ng-controller="navCtrl" ng-init="init()">
+            <md-content layout="column" layout-fill flex>
+                <md-toolbar flex>
+                    <div class="md-toolbar-tools">
+                        <md-button class="md-icon-button" ng-click="toggleLeft()" ng-show="loggedIn" aria-label="Settings">
+                            <md-icon md-svg-icon="img/icons/menu.svg" style="color: white"></md-icon>
+                        </md-button>
+                        <h2>
+                            <span>Project:Service</span>
+                        </h2>
+                        <span flex></span>
+                    </div>
+                </md-toolbar>
+                <section layout="row" ng-controller="LeftCtrl as left" layout-fill flex>
+                    <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-disable-backdrop md-whiteframe="4">
+                        <md-toolbar class="md-warn">
+                            <div class="md-toolbar-tools">
+                                <h2>
+                                    <span>{{loggedInUser}}</span>
+                                </h2>
+                            </div>
+                        </md-toolbar>
+                        <md-content layout-padding>
+                            <md-list ng-cloak>
+                                <md-list-item ng-click="left.goTo('/home')">
+                                    <h5>Find a project</h5>
+                                </md-list-item>
+                                <md-divider></md-divider>
+                                <md-list-item ng-click="left.goTo('/home')">
+                                    <h5>Upcoming projects</h5>
+                                </md-list-item>
+                                <md-divider></md-divider>
+                                <md-list-item ng-click="left.goTo('/home')">
+                                    <h5>Create a project</h5>
+                                </md-list-item>
+                                <md-divider></md-divider>
+                                <md-list-item ng-click="left.logout()">
+                                    <h5>Log out</h5>
+                                </md-list-item>
+                                <md-divider></md-divider>
+                            </md-list>
+                        </md-content>
+                    </md-sidenav>
+                    <md-content flex layout-padding>
+                        <div ng-view></div>
+                    </md-content>
+                </section>
+            </md-content>
         </div>
 
-        <script src="/js/libraries/angular.js"></script>
+        <script src="/js/libraries/angular.min.js"></script>
         <script src="/js/libraries/angular-route.min.js"></script>
+        <script src="/js/libraries/angular-animate.min.js"></script>
+        <script src="/js/libraries/angular-aria.min.js"></script>
+        <script src="/js/libraries/angular-material.min.js"></script>
         <script src="/js/libraries/angular-messages.min.js"></script>
         <script src="/js/libraries/ui-bootstrap-tpls-1.2.4.min.js"></script>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-animate.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-aria.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.4/angular-material.min.js"></script>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script src="js/app.min.js"></script>
         
     </body>

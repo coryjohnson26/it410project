@@ -1,0 +1,60 @@
+<h1>Register</h1>
+<div layout="column" ng-controller="regCtrl as reg" class="md-inline-form main" ng-cloak>
+    <md-content layout-padding>
+        <div>
+            <form name="userForm" ng-submit="reg.register()">
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>First name</label>
+                        <input required name="firstName" ng-model="reg.user.firstName">
+                        <div ng-messages="userForm.firstName.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Last name</label>
+                        <input required name="lastName" ng-model="reg.user.lastName">
+                        <div ng-messages="userForm.lastName.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Email</label>
+                        <input required name="email" ng-model="reg.user.email" type="email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/">
+                        <div ng-messages="userForm.email.$error">
+                            <div ng-message="required">This is required.</div>
+                            <div ng-message="pattern">Invalid email format.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Password</label>
+                        <input required name="password" ng-model="reg.user.password" type="password">
+                        <div ng-messages="userForm.password.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Confirm password</label>
+                        <input required name="confirmPassword" ng-model="reg.user.confirmPassword" type="password" compare-to="reg.user.password">
+                        <div ng-messages="userForm.confirmPassword.$error">
+                            <div ng-message="required">This is required.</div>
+                            <div ng-message="compareTo">Passwords must match.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="end center">
+                    <md-button layout-align="end center" class="md-warn" href="login">Cancel</md-button>
+                    <md-button layout-align="end center" class="md-raised md-primary" type="submit">Create account</md-button>
+                </div>
+            </form>
+        </div>
+    </md-content>
+</div>

@@ -26,7 +26,6 @@ gulp.task('autoprefixCSS', function () {
 gulp.task('jsMin', function() {
 	return gulp.src(['public/*.js', 'public/**/*.js'])
 		.pipe(changed('dist'))
-		.pipe(uglify())
 		.pipe(rename({ suffix: '.min' }))
 		.pipe(gulp.dest('dist'))
 })

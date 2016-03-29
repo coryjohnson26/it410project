@@ -1,8 +1,8 @@
 const db = require('../config/users');
 const Promise = require('bluebird');
 
-exports.createUser = function(user, pass){
-	return db.addUser(user,pass);
+exports.createUser = function(user){
+	return db.addUser(user);
 };
 
 exports.updateUser = function(user, pass){
@@ -16,6 +16,10 @@ exports.authUser = function(user, pass){
 exports.findUser = function(user){
 	return db.findUser(user);
 };
+
+exports.findUserById = function(id){
+	return db.findUserById(id);
+}
 
 exports.clear = function(username){
 	return db.remove(username);

@@ -2,25 +2,33 @@
     var app = angular.module('app', ['ngMaterial', 'ngRoute', 'ngMessages', 'ui.bootstrap']);
     
     app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
-        var isLoggedIn = function ($q, $http, $location){
-			var deferred = $q.defer()
-			$http.get('/loggedin').success(function (email){
-				if (email){
-					deferred.resolve()
-				}else{
-					deferred.reject()
-					$location.url('/')
-				}
-			})
-			return deferred.promise
-		}
-
         $locationProvider.html5Mode({enabled:true, requireBase : false});
+
+        var isLoggedIn = ['$q', '$http', '$rootScope', '$location', function ($q, $http, $rootScope, $location){
+	                 		var deferred = $q.defer()
+				           	$http.get('/loggedin').success(function (user){
+				           		if (user){
+				           			$rootScope.loggedInUser = user.name
+				           			$rootScope.loggedIn = true
+				           			deferred.resolve()
+				           		}else{
+				           			deferred.reject()
+				           			$rootScope.loggedInUser = null
+				           			$rootScope.loggedIn = false
+				           			$location.url('/')
+				           		}
+				           	})
+				           	return deferred.promise
+		               }];
 
         $routeProvider
             .when('/', {
             	templateUrl:'views/partials/login.html',
-            	controller: 'homeCtrl'
+            	controller: 'loginCtrl'
+            })
+            .when('/register', {
+            	templateUrl:'views/partials/register.html',
+            	controller: 'regCtrl'
             })
             .when('/home', {
             	templateUrl:'views/partials/home.html',
@@ -30,79 +38,26 @@
             })
             .when('/projects', {
             	templateUrl:'views/partials/projects.html',
-            	controller: 'projectCtrl'/*,
             	resolve:{
 					isLoggedIn: isLoggedIn
-				}*/
+				}
             })
             .otherwise({
             	redirectTo:'/home', 
-            	templateUrl:'views/partials/home.html'})
-           
+            	templateUrl:'views/partials/home.html'})       
 	}]);
 
-	app.service('projectService', function(){
-		this.projects = [
-			{
-				id: 0,
-				title: 'Rebuild home 1',
-				description: 'This is just a short description explaining the project',
-				color: 'purple',
-				link: ''
-			},
-			{
-				id: 1,
-				title: 'Rebuild home 2',
-				description: 'This is just a short description explaining the project',
-				color: 'blue'
-			},
-			{
-				id: 2,
-				title: 'Rebuild home 3',
-				description: 'This is just a short description explaining the project',
-				color: 'yellow'
-			},
-			{
-				id: 3,
-				title: 'Rebuild home 4',
-				description: 'This is just a short description explaining the project',
-				color: 'green'
-			},
-			{
-				id: 4,
-				title: 'Rebuild home 5',
-				description: 'This is just a short description explaining the project',
-				color: 'gray'
-			},
-			{
-				id: 5,
-				title: 'Rebuild home 6',
-				description: 'This is just a short description explaining the project',
-				color: 'red'
-			},
-			{
-				id: 6,
-				title: 'Rebuild home 7',
-				description: 'This is just a short description explaining the project',
-				color: 'purple'
-			},
-			{
-				id: 7,
-				title: 'Rebuild home 8',
-				description: 'This is just a short description explaining the project',
-				color: 'blue'
-			},
-			{
-				id: 8,
-				title: 'Rebuild home 9',
-				description: 'This is just a short description explaining the project',
-				color: 'yellow'
-			}
-		]
-		this.selectedProject = this.projects[0];
-
+	app.service('projectService', ['$http', '$q', function($http, $q){
+		this.projects = []
+		this.selectedProject = null
 		this.getAllProjects = function(){
-			return this.projects;
+			var deferred = $q.defer()
+			$http.get('/project/viewAll')
+			.success(function(data){
+				this.projects = data
+				deferred.resolve(this.projects)
+			})
+			return deferred.promise
 		}
 
 		this.setProject = function(id){
@@ -112,15 +67,148 @@
 		this.getProject = function(){
 			return this.selectedProject;
 		}
+	}])
+
+	app.directive('compareTo', function(){
+		return {
+	        require: "ngModel",
+	        scope: {
+	            otherModelValue: "=compareTo"
+	        },
+	        link: function(scope, element, attributes, ngModel) {
+
+	            ngModel.$validators.compareTo = function(modelValue) {
+	                return modelValue == scope.otherModelValue
+	            }
+
+	            scope.$watch("otherModelValue", function() {
+	                ngModel.$validate()
+	            })
+	        }
+	    }
 	})
 
-	app.controller('homeCtrl', ['projectService', function(projectService){
-		this.projects = projectService.getAllProjects()
+	var showToast = function($mdToast, msg) {
+		var toast = $mdToast.simple()
+	        .textContent(msg)
+	        .action('Dismiss')
+  			.highlightAction(true)     			
+	        .position('top right')
+	    $mdToast.show(toast).then(function(response) {
+
+		})
+	}
+
+	app.controller('navCtrl', ['$scope', '$http', '$timeout', '$mdSidenav', '$log', function ($scope, $http, $timeout, $mdSidenav, $log) {
+		$scope.toggleLeft = buildDelayedToggler('left');
+		/**
+		* Supplies a function that will continue to operate until the
+		* time is up.
+		*/
+		function debounce(func, wait, context) {
+			var timer;
+			return function debounced() {
+				var context = $scope,
+				args = Array.prototype.slice.call(arguments);
+				$timeout.cancel(timer);
+				timer = $timeout(function() {
+					timer = undefined;
+					func.apply(context, args);
+				}, wait || 10);
+			};
+		}
+		/**
+		* Build handler to open/close a SideNav; when animation finishes
+		* report completion in console
+		*/
+		function buildDelayedToggler(navID) {
+			return debounce(function() {
+				$mdSidenav(navID)
+				.toggle()
+			}, 200);
+		}
+		function buildToggler(navID) {
+			return function() {
+				$mdSidenav(navID)
+				.toggle()
+			}
+		}
+	}])
+
+	app.controller('LeftCtrl', ['$http', '$scope', '$timeout', '$location', '$mdSidenav', '$log', function($http, $scope, $timeout, $location, $mdSidenav, $log) {
+    	this.close = function () {
+      		$mdSidenav('left').close()
+    	}
+
+    	this.goTo = function(url){
+    		$location.url(url);
+    	}
+
+    	this.logout = function(){
+    		$http.put('/user/logout')
+    			.success(function(){
+    				$mdSidenav('left').close()
+    				$location.url('/login')
+    			})
+    	}
+  	}]);
+
+	app.controller('homeCtrl', ['projectService', '$mdDialog', function(projectService, $mdDialog){
+		this.projects = []
+		var that = this
+		projectService.getAllProjects().then(function(results){
+			that.projects = results
+		})
 
 		this.selectProject = function(id){
 			projectService.setProject(id)
 		}
 
+		this.goToProject = function(project, event) {
+			$mdDialog.show(
+				$mdDialog.alert()
+				.title(project.title)
+				.textContent(project.description)
+				.ok('Ok')
+				.targetEvent(event)
+			);
+  		};
+
+	}]);
+
+	app.controller('loginCtrl', ['$http', '$location', '$mdToast', function($http, $location, $mdToast){
+		
+		this.login = function(){
+			if(this.email && this.password){
+				$http({
+					method:'POST',
+					url:'/login',
+					data: {
+					  'email' : this.email,
+					  'password' : this.password
+					}
+				}).success(function(response){
+				    if(response === 'invalid'){
+				    	showToast($mdToast, 'Invalid credentials')
+				    }else{
+				    	$location.url('/home')
+				    }
+				})
+			}
+		}
+	}]);
+
+	app.controller('regCtrl', ['$http', '$location', '$mdToast', function($http, $location, $mdToast){
+		this.register = function(){
+			$http.post('/user/register', {
+				user: this.user
+			}).success(function(){
+				showToast($mdToast, 'Account successfully created')
+				$location.url('/login')
+			}).error(function(err){
+				showToast($mdToast, 'Email already in use')
+			})
+		}
 	}]);
 
 	app.controller('projectCtrl', ['projectService', function(projectService){

@@ -1,6 +1,10 @@
-const MongoClient = require('mongodb').MongoClient;
-const Promise = require('bluebird');
-const assert = require('assert');
+const mongo = require('mongodb')
+const MongoClient = require('mongodb').MongoClient
+const Promise = require('bluebird')
+const assert = require('assert')
+const bcrypt = require('bcrypt-nodejs')
+
+const BCRYPT_ROUNDS = 10
 
 var mongodb;
 var url = 'mongodb://localhost:27017/project';
@@ -14,14 +18,28 @@ var connect = function(){
 	});
 }; 
 
-exports.addUser = function(user, pass){
+exports.addUser = function(user){
 	return connect()
 	.then(function(db){
-		return exports.findUser(user)
+		return exports.findUser(user.email)
 			.then(function(val){
-				if(!val) return db.collection('user').insertOne({username: user, password: pass});
+				if(!val){
+					return new Promise(function(resolve,reject){
+						bcrypt.genSalt(BCRYPT_ROUNDS, function(salt){
+							bcrypt.hash(user.password, salt, null, function(err, hash){
+								if(err)reject(err)
+								return resolve(db.collection('user')
+									.insertOne({
+										email: user.email, 
+										password: hash, 
+										firstName: user.firstName, 
+										lastName: user.lastName}))
+							})
+						})
+					})
+				} 
 				return new Promise(function(resolve, reject){
-					return resolve();
+					return resolve('already exists');
 				});
 			});
 	});
@@ -30,27 +48,34 @@ exports.addUser = function(user, pass){
 exports.updateUser = function(user, pass){
 	return connect()
 	.then(function(db){
-		return db.collection('user').update({username: user}, {username: user, password: pass}, {upsert: false});
+		return db.collection('user').update({email: user}, {email: user, password: pass}, {upsert: false});
 	});
 };
 
-exports.findUser = function(user){
+exports.findUser = function(email){
 	return connect()
 	.then(function(db){
-		return db.collection('user').findOne({username: user});
+		return db.collection('user').findOne({email: email});
 	});
+};
+
+exports.findUserById = function(id){
+	return connect()
+	.then(function(db){
+		return db.collection('user').findOne({_id: new mongo.ObjectID(id)});
+	});	
 };
 
 exports.verifyUser = function(user, pass){
 	return connect()
 	.then(function(db){
-		return db.collection('user').findOne({username: user, password: pass});
+		return db.collection('user').findOne({email: user, password: pass});
 	});
 };
 
 exports.remove = function(user){
 	return connect()
 	.then(function(db){
-		return db.collection('user').remove({username: user});
+		return db.collection('user').remove({email: user});
 	});
 }

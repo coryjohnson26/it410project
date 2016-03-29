@@ -42,14 +42,9 @@ passport.use(new LocalStrategy({
 function (email, password, done) {
     email = email.toLowerCase()
     users.findUser(email).then( function (data){
-        if(data[0].length === 0){
-            return done(null, false)
-        }
-        var user = data[0][0]
-
-        bcrypt.compare(password, user.password, function (err, res) {
+        bcrypt.compare(password, data.password, function (err, res) {
             if(res){
-                return done(null, { id: user.userID, type: user.userType, email: user.email, first: user.firstName, last: user.lastName })
+                return done(null, { _id: data._id, email: data.email, name:data.firstName + ' ' + data.lastName })
             }
             done(null, false)
         })
@@ -58,11 +53,11 @@ function (email, password, done) {
     })
 }))
 passport.serializeUser(function (user, done) {
-    done(null, user.id)
+    done(null, user._id)
 })
 passport.deserializeUser(function (id, done) {
-    acc.findUserById(id).then(function (user){
-        done(null, { id: user.userID, email: user.email, first: user.firstName, last: user.lastName })
+    users.findUserById(id).then(function (user){
+        done(null, { _id: user._id, email: user.email, name:user.firstName + ' ' + user.lastName})
     })
 })
 

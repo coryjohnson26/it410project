@@ -15,4 +15,4 @@ exports.findProject = function(name){
 
 exports.getAllProjects = function(){
 	return db.getProjects();
-}
+};
