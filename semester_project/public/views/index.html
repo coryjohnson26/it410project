@@ -14,60 +14,49 @@
         <link href="css/main.min.css" rel="stylesheet">
     </head>
     <body>
-        <div ng-controller="navCtrl" ng-init="init()">
-            <md-content layout="column" layout-fill flex>
-                <md-toolbar flex>
-                    <div class="md-toolbar-tools">
-                        <md-button class="md-icon-button" ng-click="toggleLeft()" ng-show="loggedIn" aria-label="Settings">
-                            <md-icon md-svg-icon="img/icons/menu.svg" style="color: white;"></md-icon>
-                        </md-button>
-                        <h2>
-                            <span>Project:Service</span>
-                        </h2>
-                        <span flex></span>
-                    </div>
-                </md-toolbar>
-                <section layout="row" ng-controller="LeftCtrl as left" layout-fill flex>
-                    <md-sidenav
-                        class="md-sidenav-left"
-                        md-component-id="left"
-                        md-is-locked-open="$mdMedia('gt-md')"
-                        md-disable-backdrop
-                        md-whiteframe="4">
-                        <md-toolbar class="md-warn">
-                            <div class="md-toolbar-tools">
-                                <h2>
-                                    <span>{{loggedInUser}}</span>
-                                </h2>
-                            </div>
-                        </md-toolbar>
-                        <md-content layout-padding>
-                            <md-list ng-cloak>
-                                <md-list-item ng-click="left.goTo('/home')">
-                                    <h5>Find a project</h5>
-                                </md-list-item>
-                                <md-divider></md-divider>
-                                <md-list-item ng-click="left.goTo('/home')">
-                                    <h5>Upcoming projects</h5>
-                                </md-list-item>
-                                <md-divider></md-divider>
-                                <md-list-item ng-click="left.goTo('/home')">
-                                    <h5>Create a project</h5>
-                                </md-list-item>
-                                <md-divider></md-divider>
-                                <md-list-item ng-click="left.logout()">
-                                    <h5>Log out</h5>
-                                </md-list-item>
-                                <md-divider></md-divider>
-                            </md-list>
-                        </md-content>
-                    </md-sidenav>
-                    <md-content flex layout-padding>
-                        <div ng-view></div>
-                    </md-content>
-                </section>
+        <md-content ng-controller="LeftCtrl as left">
+            <md-toolbar ng-controller="navCtrl">
+                <div class="md-toolbar-tools">
+                    <md-button class="md-icon-button" ng-click="toggleLeft()" ng-show="loggedIn" aria-label="Settings">
+                        <md-icon md-svg-icon="img/icons/menu.svg" style="color:white;"></md-icon>
+                    </md-button>
+                    <h2>Project:Service</h2>
+                </div>
+            </md-toolbar>
+            <md-content flex layout="column" layout-padding>
+                <div ng-view></div>
             </md-content>
-        </div>
+            <md-sidenav
+                class="md-sidenav-left"
+                md-component-id="left"
+                md-whiteframe="4">
+                <md-content layout-padding>
+                    <md-subheader class="md-no-sticky">
+                        <md-icon md-svg-icon="/img/icons/person.svg" style="width:60px;height:60px;"></md-icon>
+                        <h4>{{loggedInUser}}</h4>
+                    </md-subheader>
+                    <md-list ng-cloak>
+                        <md-divider></md-divider>
+                        <md-list-item ng-click="left.goTo('/home')">
+                            <md-icon md-svg-icon="/img/icons/search.svg" style="color:#3e82f7;"></md-icon>
+                            <p>Find a project</p>
+                        </md-list-item>
+                        <md-list-item ng-click="left.goTo('/home')">
+                            <md-icon md-svg-icon="/img/icons/calendar.svg" style="color:#f27a00;"></md-icon>
+                            <p>Upcoming projects</p>
+                        </md-list-item>
+                        <md-list-item ng-click="left.goTo('/create')">
+                            <md-icon md-svg-icon="/img/icons/create.svg" style="color:#009e56;"></md-icon>
+                            <p>Create a project</p>
+                        </md-list-item>
+                        <md-list-item ng-click="left.logout()">
+                            <md-icon md-svg-icon="/img/icons/exit.svg" style="color:#de4330;"></md-icon>
+                            <p>Log out</p>
+                        </md-list-item>
+                    </md-list>
+                </md-content>
+            </md-sidenav>
+        </md-content>
 
         <script src="/js/libraries/angular.min.js"></script>
         <script src="/js/libraries/angular-route.min.js"></script>

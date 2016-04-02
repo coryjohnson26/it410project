@@ -1,0 +1,51 @@
+<div style="text-align: center">
+    <h1>Create project</h1>
+</div>
+<div layout="column" ng-controller="createCtrl as create" class="md-inline-form main" ng-cloak>
+    <md-content layout-padding>
+        <div>
+            <form name="projectForm" ng-submit="create.addProj()">
+                <div layout-gt-xs="row">
+                    <md-input-container class="md-block" flex-gt-xs>
+                        <label>Project title</label>
+                        <input ng-model="create.project.title" required>
+                    </md-input-container>
+                    <md-input-container required class="md-block" flex-gt-xs>
+                        <label>Project date</label>
+                        <input ng-model="create.project.date" type="date" required>
+                    </md-input-container>
+                </div>
+                <div layout="row" style="">
+                    <md-input-container class="md-block" flex-gt-xs>
+                        <label>Begin time</label>
+                        <input ng-model="create.project.beginTime" type="time" required>
+                    </md-input-container>
+                    <md-input-container required class="md-block" flex-gt-xs>
+                        <label>End time</label>
+                        <input ng-model="create.project.endTime" type="time" required>
+                    </md-input-container>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Type</label>
+                        <md-select required ng-model="create.project.type">
+                            <md-option ng-repeat="type in create.types" value="{{type.img}}">
+                                {{type.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <md-input-container class="md-block">
+                    <label>Address</label>
+                    <input ng-model="create.project.address" required>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Description</label>
+                    <textarea ng-model="create.project.description" md-maxlength="300" md-select-on-focus required></textarea>
+                </md-input-container>
+                <div layout="row" layout-align="end center">
+                    <md-button layout-align="end center" class="md-warn" href="home">Cancel</md-button>
+                    <md-button layout-align="end center" class="md-raised md-primary" type="submit">Create project</md-button>
+                </div>
+            </form>
+        </div>
+    </md-content>
+</div>

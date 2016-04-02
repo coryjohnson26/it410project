@@ -42,6 +42,18 @@
 					isLoggedIn: isLoggedIn
 				}
             })
+            .when('/create', {
+            	templateUrl:'views/partials/create.html',
+            	resolve:{
+					isLoggedIn: isLoggedIn
+				}
+            })
+            .when('/view/:id', {
+            	templateUrl:'views/partials/view.html',
+            	resolve:{
+					isLoggedIn: isLoggedIn
+				}
+            })
             .otherwise({
             	redirectTo:'/home', 
             	templateUrl:'views/partials/home.html'})       
@@ -141,6 +153,7 @@
     	}
 
     	this.goTo = function(url){
+    		$mdSidenav('left').close()
     		$location.url(url);
     	}
 
@@ -153,27 +166,16 @@
     	}
   	}]);
 
-	app.controller('homeCtrl', ['projectService', '$mdDialog', function(projectService, $mdDialog){
+	app.controller('homeCtrl', ['projectService', '$mdDialog', '$location', function(projectService, $mdDialog, $location){
 		this.projects = []
 		var that = this
 		projectService.getAllProjects().then(function(results){
 			that.projects = results
 		})
 
-		this.selectProject = function(id){
-			projectService.setProject(id)
-		}
-
-		this.goToProject = function(project, event) {
-			$mdDialog.show(
-				$mdDialog.alert()
-				.title(project.title)
-				.textContent(project.description)
-				.ok('Ok')
-				.targetEvent(event)
-			);
+		this.goToProject = function(project) {
+			$location.url('/view/' + project._id)
   		};
-
 	}]);
 
 	app.controller('loginCtrl', ['$http', '$location', '$mdToast', function($http, $location, $mdToast){
@@ -207,6 +209,72 @@
 				$location.url('/login')
 			}).error(function(err){
 				showToast($mdToast, 'Email already in use')
+			})
+		}
+	}]);
+
+	app.controller('createCtrl', ['$http', '$location', '$mdToast', function($http, $location, $mdToast){
+		this.types = [
+			{
+				name: 'Construction',
+				img: '/img/icons/build.svg'
+			},
+			{
+				name: 'Child care',
+				img: '/img/icons/child_friendly.svg'
+			},
+			{
+				name: 'Clean-up',
+				img: '/img/icons/delete.svg'
+			},
+			{
+				name: 'Food',
+				img: '/img/icons/food.svg'
+			},
+			{
+				name: 'Grocery',
+				img: '/img/icons/grocery.svg'
+			},
+			{
+				name: 'Home repair',
+				img: '/img/icons/home.svg'
+			},
+			{
+				name: 'Helping hand',
+				img: '/img/icons/pan_tool.svg'
+			},
+			{
+				name: 'Gardening',
+				img: '/img/icons/plant.svg'
+			},
+			{
+				name: 'Other',
+				img: '/img/icons/other.svg'
+			}
+		]
+
+		this.project = {
+			type: ''
+		}
+
+		this.addProj = function(){
+			$http.post('/project/create', {
+				project: this.project
+			}).success(function(){
+				showToast($mdToast, 'Project successfully created')
+				$location.url('/login')
+			}).error(function(err){
+				console.log(err)
+			})
+		}
+	}]);
+
+	app.controller('viewCtrl', ['$http', '$location', '$mdToast', '$routeParams', function($http, $location, $mdToast, $routeParams){
+		this.init = function(){
+			$http.get('/project/view', {
+				projectId: $routeParams.id
+			}).success(function(result){
+				this.project = result
 			})
 		}
 	}]);

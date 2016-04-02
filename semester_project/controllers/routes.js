@@ -30,13 +30,6 @@ router.post('/login', function (req, res, next) {
 	})(req, res, next)
 })
 
-router.get('/logout', function (req, res){
-	if(req.user){ 
-		req.logout()
-		res.sendStatus(200)
-	}
-})
-
 router.get('*', function (req, res) {
 	console.log('catch all', req.originalUrl)
 	res.sendFile('index.html', { root: path.join(__dirname, '../dist/views') })

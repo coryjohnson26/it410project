@@ -1,13 +1,20 @@
-<section>
-	<md-list flex ng-controller="homeCtrl as ctrl" class="main" ng-cloak>
-		<md-subheader class="md-primary">Current Projects</md-subheader>
-		<md-input-container class="md-block" flex-gt-sm>
+<section ng-controller="homeCtrl as ctrl">
+	<div>
+		<md-input-container class="md-block main" flex-gt-sm>
 	        <label>Search</label>
 	        <input name="search" ng-model="query" type="text">
 	    </md-input-container>
-		<md-list-item ng-repeat="project in ctrl.projects | filter:query" ng-click="ctrl.goToProject(project,$event)">
-			<img alt="{{ project.title }}" ng-src="{{ project.img }}" class="md-avatar"/>
-			<p>{{project.title}}</p>
-		</md-list-item>
+	</div>
+	<md-list flex class="md-dense main" ng-cloak>
+		<md-subheader class="md-primary">Current Projects</md-subheader>
+		<md-list-item class="md-3-line md-long-text" ng-repeat="project in ctrl.projects | filter:query | orderBy:['date','beginTime']" ng-click="ctrl.goToProject(project,$event)">
+          <md-icon md-svg-icon="{{project.type}}" style="color:black;width:40px;height:40px;" aria-label="{{project.type}}"></md-icon>
+          <div class="md-list-item-text" layout="column">
+            <h3>{{ project.title }}</h3>
+            <h4>{{ project.address }}</h4>
+            <i>{{ project.date | date:'MM/dd/yyyy'}} @ {{ project.beginTime | date:'h:mma'}}-{{ project.endTime | date:'h:mma'}}</i>
+            <p>{{ project.description }}</p>
+          </div>
+        </md-list-item>
 	</md-list>
 </section>

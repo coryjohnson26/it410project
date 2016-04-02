@@ -1,6 +1,7 @@
-const MongoClient = require('mongodb').MongoClient;
-const Promise = require('bluebird');
-const assert = require('assert');
+const MongoClient = require('mongodb').MongoClient
+const mongo = require('mongodb')
+const Promise = require('bluebird')
+const assert = require('assert')
 
 var mongodb;
 var url = 'mongodb://localhost:27017/project';
@@ -14,16 +15,16 @@ var connect = function(){
 	})
 }
 
-exports.addProject = function(name){
+exports.addProject = function(project){
 	return connect()
 	.then(function(db){
-		return exports.findProject(name)
-			.then(function(val){
-				if(!val) return db.collection('project').insertOne({name: name})
-				return new Promise(function(resolve, reject){
-					return resolve()
-				})
-			})
+		return db.collection('project').insertOne({title: project.title
+													, description: project.description
+													, address: project.address
+													, date: project.date
+													, beginTime: project.beginTime
+													, endTime: project.endTime
+													, type: project.type})
 	})
 }
 
@@ -38,6 +39,13 @@ exports.findProject = function(name){
 	return connect()
 	.then(function(db){
 		return db.collection('project').findOne({name: name});
+	})
+}
+
+exports.findProjectById = function(id){
+	return connect()
+	.then(function(db){
+		return db.collection('project').findOne({_id: new mongo.ObjectID(id)})
 	})
 }
 
