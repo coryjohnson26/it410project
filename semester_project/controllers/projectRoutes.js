@@ -21,6 +21,7 @@ router.get('/project/viewAll', auth, function(req, res){
 })
 
 router.get('/project/view', auth, function(req, res){
+	console.log(req.body.projectId)
 	projects.getProjectById(req.body.projectId)
 	.then(function(result){
 		if(result){return res.json(result)}

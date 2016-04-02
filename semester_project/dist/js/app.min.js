@@ -271,6 +271,7 @@
 
 	app.controller('viewCtrl', ['$http', '$location', '$mdToast', '$routeParams', function($http, $location, $mdToast, $routeParams){
 		this.init = function(){
+			console.log($routeParams.id)
 			$http.get('/project/view', {
 				projectId: $routeParams.id
 			}).success(function(result){
