@@ -1,17 +1,11 @@
-<div class="main" layout-padding ng-controller="homeCtrl as ctrl">
-	<div class="search">
-        <md-input-container class="md-block">
-            <label>Search</label>
-            <input name="search" ng-model="query" type="text">
-        </md-input-container>
-    </div>
-	<md-card>
+<div class="main" layout-padding ng-controller="upcomingCtrl as ctrl">
+	<md-card ng-repeat="month in upcomingMonths">
         <md-card-title>
           <md-card-title-text>
-            <span class="md-headline">Projects</span>
+            <span class="md-headline">{{ month }}</span>
           </md-card-title-text>
         </md-card-title>
-        <md-card ng-repeat="project in ctrl.projects | filter:query | orderBy:['date', 'beginTime']" ng-click="ctrl.showProject(project, $event)">
+        <md-card ng-repeat="project in ctrl.projects[month] | orderBy:['date', 'beginTime']" ng-click="ctrl.showProject(project, $event)">
             <md-list>
                 <md-list-item class="md-3-line">
                     <md-icon md-svg-icon="{{project.type}}" style="color:black;width:40px;height:40px" aria-label="{{project.type}}"></md-icon>

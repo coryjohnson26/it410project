@@ -48,32 +48,31 @@
 					isLoggedIn: isLoggedIn
 				}
             })
-            .when('/view/:id', {
-            	templateUrl:'views/partials/view.html',
-            	resolve:{
-					isLoggedIn: isLoggedIn
-				}
-            })
             .otherwise({
             	redirectTo:'/home', 
             	templateUrl:'views/partials/home.html'})       
 	}]);
 
 	app.service('projectService', ['$http', '$q', function($http, $q){
+		var that = this
 		this.projects = []
 		this.selectedProject = null
 		this.getAllProjects = function(){
 			var deferred = $q.defer()
 			$http.get('/project/viewAll')
 			.success(function(data){
-				this.projects = data
-				deferred.resolve(this.projects)
+				that.projects = data
+				deferred.resolve(that.projects)
 			})
 			return deferred.promise
 		}
 
 		this.setProject = function(id){
-			this.selectedProject = this.projects[id];
+			for(var i=0; i<this.projects.length; i++){
+				if(JSON.stringify(id) === JSON.stringify(this.projects[i]._id)){
+					this.selectedProject = this.projects[i];
+				}
+			}
 		}
 
 		this.getProject = function(){
@@ -147,7 +146,7 @@
 		}
 	}])
 
-	app.controller('LeftCtrl', ['$http', '$scope', '$timeout', '$location', '$mdSidenav', '$log', function($http, $scope, $timeout, $location, $mdSidenav, $log) {
+	app.controller('LeftCtrl', ['$http', '$scope', '$timeout', '$location', '$mdSidenav', '$mdToast', function($http, $scope, $timeout, $location, $mdSidenav, $mdToast) {
     	this.close = function () {
       		$mdSidenav('left').close()
     	}
@@ -162,20 +161,36 @@
     			.success(function(){
     				$mdSidenav('left').close()
     				$location.url('/login')
+    				showToast($mdToast, 'Successfully logged out')
     			})
     	}
   	}]);
 
-	app.controller('homeCtrl', ['projectService', '$mdDialog', '$location', function(projectService, $mdDialog, $location){
+	app.controller('homeCtrl', ['projectService', '$scope', '$mdDialog', '$location', '$mdDialog', '$mdMedia', function(projectService, $scope, $mdDialog, $location, $mdDialog, $mdMedia){
 		this.projects = []
 		var that = this
 		projectService.getAllProjects().then(function(results){
 			that.projects = results
 		})
 
-		this.goToProject = function(project) {
-			$location.url('/view/' + project._id)
-  		};
+		this.showProject = function(project, ev) {
+			projectService.setProject(project._id)
+			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+			$mdDialog.show({
+				controller: 'homeCtrl',
+				templateUrl: 'views/partials/view.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose:true,
+				fullscreen: useFullScreen
+			})
+
+			$scope.$watch(function() {
+				return $mdMedia('xs') || $mdMedia('sm')
+				}, function(wantsFullScreen) {
+				$scope.customFullscreen = (wantsFullScreen === true)
+			})
+		};
 	}]);
 
 	app.controller('loginCtrl', ['$http', '$location', '$mdToast', function($http, $location, $mdToast){
@@ -195,6 +210,8 @@
 				    }else{
 				    	$location.url('/home')
 				    }
+				}).error(function(err){
+					showToast($mdToast, err)
 				})
 			}
 		}
@@ -202,6 +219,7 @@
 
 	app.controller('regCtrl', ['$http', '$location', '$mdToast', function($http, $location, $mdToast){
 		this.register = function(){
+			this.user.email = this.user.email.toLowerCase()
 			$http.post('/user/register', {
 				user: this.user
 			}).success(function(){
@@ -253,8 +271,11 @@
 			}
 		]
 
+		this.supplies = ['Tools', 'Paint', 'Toys', 'Child care supplies']
+
 		this.project = {
-			type: ''
+			type: '',
+			supplies: ''
 		}
 
 		this.addProj = function(){
@@ -262,22 +283,38 @@
 				project: this.project
 			}).success(function(){
 				showToast($mdToast, 'Project successfully created')
-				$location.url('/login')
+				$location.url('/home')
 			}).error(function(err){
 				console.log(err)
 			})
 		}
 	}]);
 
-	app.controller('viewCtrl', ['$http', '$location', '$mdToast', '$routeParams', function($http, $location, $mdToast, $routeParams){
-		this.init = function(){
-			console.log($routeParams.id)
-			$http.get('/project/view', {
-				projectId: $routeParams.id
+	app.controller('viewCtrl', ['projectService', '$scope', '$http', '$mdDialog', '$mdToast', function(projectService, $scope, $http, $mdDialog, $mdToast){
+		$scope.project = projectService.getProject()
+		if($scope.project.currentVolunteers === undefined){
+			$scope.project.currentVolunteers = []
+		}
+		$scope.cancel = function() {
+			$mdDialog.cancel();
+		};
+		$scope.volunteer = function(){
+			console.log('volunteering!')
+			$http.post('/project/volunteer', {
+				projectId: $scope.project._id
 			}).success(function(result){
-				this.project = result
+				console.log(result)
+				showToast($mdToast, 'Successfully volunteered for ' + $scope.project.title)
+				$scope.project.currentVolunteers.push(result)
+			}).error(function(err){
+				showToast($mdToast, err)
 			})
 		}
+
+	}]);
+
+	app.controller('upcomingCtrl', ['projectService', '$scope', '$mdDialog', '$location', '$mdDialog', '$mdMedia', function(projectService, $scope, $mdDialog, $location, $mdDialog, $mdMedia){
+
 	}]);
 
 	app.controller('projectCtrl', ['projectService', function(projectService){

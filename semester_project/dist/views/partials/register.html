@@ -1,7 +1,7 @@
-<div style="text-align: center">
-    <h1>Register</h1>
-</div>
-<div layout="column" ng-controller="regCtrl as reg" class="md-inline-form main" ng-cloak>
+<div layout="column" ng-controller="regCtrl as reg" class="md-inline-form login" ng-cloak>
+    <div style="text-align: center">
+        <h1>Register</h1>
+    </div>
     <md-content layout-padding>
         <div>
             <form name="userForm" ng-submit="reg.register()">
@@ -54,6 +54,7 @@
                 </div>
                 <div layout="row" layout-align="end center">
                     <md-button layout-align="end center" class="md-warn" href="login">Cancel</md-button>
+                    <span flex></span>
                     <md-button layout-align="end center" class="md-raised md-primary" type="submit">Create account</md-button>
                 </div>
             </form>

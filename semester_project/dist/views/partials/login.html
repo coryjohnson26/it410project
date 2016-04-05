@@ -1,8 +1,8 @@
-<div style="text-align: center">
-    <h1>Let's get serving!</h1>
-</div>
-<div class="main" ng-controller="loginCtrl as login">
-	<md-content layout-padding>
+<div class="login" layout-padding>
+    <div style="text-align: center">
+        <h1>Let's get serving!</h1>
+    </div>
+    <div ng-controller="loginCtrl as login">
         <div>
             <form name="userForm" ng-submit="login.login()">
                 <div layout-gt-sm="row">
@@ -25,9 +25,10 @@
                 </div>
                 <div layout="row" layout-align="end center">
 	                <md-button layout-align="end center" class="md-primary" href="register">Register</md-button>
+                    <span flex></span>
 	                <md-button class="md-raised md-primary" type="submit">Login</md-button>
             	</div>
             </form>
         </div>
-    </md-content>
+    </div>
 </div>

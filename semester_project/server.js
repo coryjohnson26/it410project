@@ -49,7 +49,7 @@ function (email, password, done) {
             done(null, false)
         })
     }).catch( function (err){
-        console.error(err)
+        console.error('Error is: ' + err)
     })
 }))
 passport.serializeUser(function (user, done) {

@@ -15,7 +15,7 @@ var connect = function(){
 	})
 }
 
-exports.addProject = function(project){
+exports.addProject = function(project, user){
 	return connect()
 	.then(function(db){
 		return db.collection('project').insertOne({title: project.title
@@ -24,7 +24,11 @@ exports.addProject = function(project){
 													, date: project.date
 													, beginTime: project.beginTime
 													, endTime: project.endTime
-													, type: project.type})
+													, type: project.type
+													, volunteers: project.volunteers
+													, supplies: project.supplies
+													, owner: user
+													, currentVolunteers: []})
 	})
 }
 
@@ -53,5 +57,12 @@ exports.getProjects = function(){
 	return connect()
 	.then(function(db){
 		return db.collection('project').find({}).toArray();
+	})
+}
+
+exports.addVolunteer = function(id, person){
+	return connect()
+	.then(function(db){
+		return db.collection('project').update({id: id}, {$addToSet: { currentVolunteers: {"email": person.email, "name":person.name, "_id": new mongo.ObjectID(person._id)} }})
 	})
 }

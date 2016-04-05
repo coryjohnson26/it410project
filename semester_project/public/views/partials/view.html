@@ -1,14 +1,58 @@
-<section ng-controller="viewCtrl as ctrl" ng-init="ctrl.init()">
-	<md-list flex class="md-dense main" ng-cloak>
-		<md-subheader class="md-primary">Current Projects</md-subheader>
-		<md-list-item class="md-3-line md-long-text" ng-click="ctrl.goToProject(project)">
-          <md-icon md-svg-icon="{{ctrl.project.type}}" style="color:black;width:40px;height:40px;" aria-label="{{ctrl.project.type}}"></md-icon>
-          <div class="md-list-item-text" layout="column">
-            <h3>{{ ctrl.project.title }}</h3>
-            <h4>{{ ctrl.project.address }}</h4>
-            <i>{{ ctrl.project.date | date:'MM/dd/yyyy'}} @ {{ ctrl.project.beginTime | date:'h:mma'}}-{{ ctrl.project.endTime | date:'h:mma'}}</i>
-            <p>{{ ctrl.project.description }}</p>
-          </div>
-        </md-list-item>
-	</md-list>
-</section>
+<md-dialog ng-controller="viewCtrl" aria-label="{{project.title}}"  ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <md-icon md-svg-src="{{project.type}}" aria-label="Project type"></md-icon>
+        &nbsp;&nbsp;<h2>{{project.title}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/close.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content layout-padding>
+        <div class="md-dialog-content" >
+            <br/><br/>
+            <md-card layout-padding>
+                <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">Details</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                <div layout="row">
+                    {{ project.description }}
+                </div>
+                <div layout="column">
+                    <div flex>
+                        <strong>Location: </strong>{{ project.address }}</p>
+                    </div>
+                    <div flex>
+                        <strong>When: </strong>{{ project.date | date:'MM/dd/yyyy' }} @ {{ project.beginTime | date:'h:mma' }} - {{ project.endTime | date:'h:mma' }}</p>
+                    </div>
+                    <div flex>
+                        <strong># of Volunteers needed: </strong>{{ project.volunteers }}
+                    </div>
+                </div>
+            </md-card>
+            <div layout="row">
+                <md-card class="volunteer" layout-padding>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">Volunteers</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <div class="md-toolbar-tools small" ng-repeat="user in project.currentVolunteers">
+                        {{ user.name }}
+                        <span flex></span>
+                        {{ user.email }}
+                    </div>
+                </md-card>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <span flex></span>
+      <md-button ng-click="volunteer()" class="md-primary" style="margin-right:20px;">
+        Volunteer for project
+      </md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -14,7 +14,7 @@
         <link href="css/main.min.css" rel="stylesheet">
     </head>
     <body>
-        <md-content ng-controller="LeftCtrl as left">
+        <div ng-controller="LeftCtrl as left">
             <md-toolbar ng-controller="navCtrl">
                 <div class="md-toolbar-tools">
                     <md-button class="md-icon-button" ng-click="toggleLeft()" ng-show="loggedIn" aria-label="Settings">
@@ -23,10 +23,7 @@
                     <h2>Project:Service</h2>
                 </div>
             </md-toolbar>
-            <md-content flex layout="column" layout-padding>
-                <div ng-view></div>
-            </md-content>
-            <md-sidenav class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
+            <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
                 <md-content layout-padding>
                     <md-subheader class="md-no-sticky">
                         <md-icon md-svg-icon="/img/icons/person.svg" style="width:60px;height:60px"></md-icon>
@@ -53,7 +50,8 @@
                     </md-list>
                 </md-content>
             </md-sidenav>
-        </md-content>
+            <md-content layout-padding flex ng-view></md-content>
+        </div>
 
         <script src="/js/libraries/angular.min.js"></script>
         <script src="/js/libraries/angular-route.min.js"></script>

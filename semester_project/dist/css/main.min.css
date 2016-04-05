@@ -1,1 +1,1 @@
-#content{height:100%}#content>md-content{background-color:#eee}.main{max-width:500px;margin:0 auto}
+#content{height:100%}#content>md-content{background-color:#eee}md-toolbar{position:fixed}md-content .main{position:relative;padding-top:60px;margin:0 auto}.login,.search{margin:0 auto;max-width:600px}.login{max-width:500px}.login,.md-dialog-content{position:relative;padding-top:60px}.volunteer{width:100%}

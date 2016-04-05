@@ -1,11 +1,38 @@
-#content { height: 100%; }
-
-#content > md-content {
-  background-color: #eee; 
+#content { 
+	height: 100%; 
 }
 
-/*login*/
-.main {
-  max-width: 500px;
-  margin: 0 auto;
+#content > md-content {
+	background-color: #eee; 
+}
+
+md-toolbar{
+	position:fixed;
+}
+
+md-content .main{
+	position: relative;
+	padding-top: 60px;
+	margin: 0 auto;	
+}
+
+.search{
+	margin: 0 auto;	
+	max-width: 600px;
+}
+
+.login{
+	position: relative;
+	max-width: 500px;
+	padding-top: 60px;
+	margin: 0 auto;	
+}
+
+.md-dialog-content{
+	position: relative;
+	padding-top: 60px;
+}
+
+.volunteer{
+	width: 100%;
 }
