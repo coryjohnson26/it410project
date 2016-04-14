@@ -169,9 +169,13 @@
 	app.controller('homeCtrl', ['projectService', '$scope', '$mdDialog', '$location', '$mdDialog', '$mdMedia', function(projectService, $scope, $mdDialog, $location, $mdDialog, $mdMedia){
 		this.projects = []
 		var that = this
-		projectService.getAllProjects().then(function(results){
-			that.projects = results
-		})
+		var getProjects = function(){
+			projectService.getAllProjects().then(function(results){
+				that.projects = results
+			})
+		}
+
+		getProjects();
 
 		this.showProject = function(project, ev) {
 			projectService.setProject(project._id)
@@ -183,6 +187,8 @@
 				targetEvent: ev,
 				clickOutsideToClose:true,
 				fullscreen: useFullScreen
+			}).finally(function(){
+				getProjects()
 			})
 
 			$scope.$watch(function() {
@@ -299,13 +305,15 @@
 			$mdDialog.cancel();
 		};
 		$scope.volunteer = function(){
-			console.log('volunteering!')
 			$http.post('/project/volunteer', {
 				projectId: $scope.project._id
 			}).success(function(result){
-				console.log(result)
-				showToast($mdToast, 'Successfully volunteered for ' + $scope.project.title)
-				$scope.project.currentVolunteers.push(result)
+				if(result === 'already exists') {
+					showToast($mdToast, 'Already volunteered for ' + $scope.project.title)
+				}else{
+					showToast($mdToast, 'Successfully volunteered for ' + $scope.project.title)
+					$scope.project.currentVolunteers.push(result)
+				}
 			}).error(function(err){
 				showToast($mdToast, err)
 			})

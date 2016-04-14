@@ -63,6 +63,22 @@ exports.getProjects = function(){
 exports.addVolunteer = function(id, person){
 	return connect()
 	.then(function(db){
-		return db.collection('project').update({id: id}, {$addToSet: { currentVolunteers: {"email": person.email, "name":person.name, "_id": new mongo.ObjectID(person._id)} }})
+		return exports.findVolunteer(id, person._id).then(function(val){
+			if(!val){
+				return db.collection('project').update({_id: new mongo.ObjectID(id)}, {$push: { currentVolunteers: person }})
+			}
+			return new Promise(function(resolve, reject){
+				return resolve('already exists');
+			});
+		})
+	})
+}
+
+exports.findVolunteer = function(id, personId){
+	return connect()
+	.then(function(db){
+		return db.collection('project').findOne({_id: new mongo.ObjectID(id), currentVolunteers: {$elemMatch : {
+			_id: new mongo.ObjectID(personId)
+		}}})
 	})
 }

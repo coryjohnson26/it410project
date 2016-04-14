@@ -50,6 +50,9 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
+      <md-button ng-show="project.isOwner" ng-click="edit()" class="md-primary" style="margin-right:20px">
+        Edit
+      </md-button>    
       <span flex></span>
       <md-button ng-click="volunteer()" class="md-primary" style="margin-right:20px">
         Volunteer for project
