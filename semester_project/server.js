@@ -14,7 +14,7 @@ const favicon = require('serve-favicon')
 const app   = express()
 const users = require('./src/users')
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 80
 
 app.disable('x-powered-by')
 app.use(bodyParser.json())
