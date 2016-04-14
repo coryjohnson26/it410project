@@ -42,14 +42,15 @@ passport.use(new LocalStrategy({
 function (email, password, done) {
     email = email.toLowerCase()
     users.findUser(email).then( function (data){
+        if(!data){
+            return done(null, false)
+        }
         bcrypt.compare(password, data.password, function (err, res) {
             if(res){
                 return done(null, { _id: data._id, email: data.email, name:data.firstName + ' ' + data.lastName })
             }
             done(null, false)
         })
-    }).catch( function (err){
-        console.error('Error is: ' + err)
     })
 }))
 passport.serializeUser(function (user, done) {
